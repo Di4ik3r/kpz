@@ -1,9 +1,9 @@
 package database
 
+import model.Game
 import java.sql.Connection
 import java.sql.DriverManager
-
-import java.sql.SQLException
+import java.sql.PreparedStatement
 import java.util.*
 
 
@@ -17,20 +17,44 @@ class Database {
 
     private val databaseName: String = "l7"
 
-    private var connection: Connection? = null
+    var connection: Connection? = null
 
     init {
         val connectionProps = Properties()
-        connectionProps.put("user", this.userName)
-        connectionProps.put("password", this.userPass)
+        connectionProps["user"] = this.userName
+        connectionProps["password"] = this.userPass
         this.connection = DriverManager.getConnection(
-            "jdbc:${this.dbms}://${this.serverName}:${this.port.toString()}/${this.databaseName}"
-            ,
-//            connectionProps
-            userName, userPass
+            "jdbc:${this.dbms}://${this.serverName}:${this.port.toString()}/${this.databaseName}",
+            connectionProps
         )
         println("Connected to database")
     }
+
+    fun insertInGames(game: Game) {
+        val sql = "INSERT INTO games (name, price) VALUES (?, ?)"
+
+        val statement: PreparedStatement = this.connection!!.prepareStatement(sql)
+        statement.setString(1, game.name)
+        statement.setFloat(2, game.price!!)
+
+        val rowsInserted = statement.executeUpdate()
+        if (rowsInserted > 0) {
+            println("A new user was inserted successfully!")
+        }
+    }
+
+    fun getAllFromGames() {
+        val input = "SELECT * FROM games"
+        val statement = this.connection?.prepareStatement(input)
+        val result = statement?.executeQuery()
+        while(result?.next()!!) {
+            val id = result.getInt(1)
+            val name = result.getString(2)
+            val price = result.getFloat(3)
+            println("$id: $name = $price")
+        }
+    }
+
 
 //    @Throws(SQLException::class)
 //    fun getConnection(): Connection? {
