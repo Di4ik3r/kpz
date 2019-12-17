@@ -8,15 +8,13 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 
-interface Developer : Entity<Developer> {
+interface Role : Entity<Role> {
     val id: Int
     var name: String
-    var role: Int
 }
 
-object Developers : Table<Developer>("developers") {
+object Roles : Table<Role>("roles") {
 
     val id by int("id").primaryKey().bindTo { it.id }
     val name by varchar("name").bindTo { it.name }
-    val role by int("role").bindTo { it.role }
 }

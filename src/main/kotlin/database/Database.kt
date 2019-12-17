@@ -1,12 +1,12 @@
 package database
 
-import model.Game
+//import model.Game
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.util.*
 
-
+/*
 class Database {
 
     private val userName: String = "root"
@@ -72,3 +72,5 @@ class Database {
 //        return conn
 //    }
 }
+
+*/

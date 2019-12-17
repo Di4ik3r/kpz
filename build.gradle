@@ -22,6 +22,8 @@ dependencies {
 //    compile 'org.jetbrains.exposed:exposed:0.17.7'
 
     compile "me.liuwj.ktorm:ktorm-core:2.6"
+
+    compile "me.liuwj.ktorm:ktorm-support-mysql:2.6"
 }
 
 compileKotlin {
