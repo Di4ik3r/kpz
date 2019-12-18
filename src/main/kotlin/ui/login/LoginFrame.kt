@@ -29,7 +29,7 @@ class LoginFrame : JFrame() {
             Database.connect("jdbc:mysql://localhost:3306/kpz", user = name, password = pass, driver = "com.mysql.cj.jdbc.Driver")
             when(name) {
                 "root" ->  {
-                    val editFrame = EditFrame()
+                    val editFrame = EditFrame(this)
                     editFrame.isVisible = true
                     this.isVisible = false
                 }

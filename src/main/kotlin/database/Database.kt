@@ -1,12 +1,12 @@
 package database
 
 //import model.Game
+import model.Game
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.util.*
 
-/*
 class Database {
 
     private val userName: String = "root"
@@ -15,7 +15,7 @@ class Database {
     private val serverName: String = "localhost"
     private val port = 3306
 
-    private val databaseName: String = "l7"
+    private val databaseName: String = "kpz"
 
     var connection: Connection? = null
 
@@ -30,12 +30,16 @@ class Database {
         println("Connected to database")
     }
 
+    fun getUnuserDevelopers() {
+
+    }
+
     fun insertInGames(game: Game) {
         val sql = "INSERT INTO games (name, price) VALUES (?, ?)"
 
         val statement: PreparedStatement = this.connection!!.prepareStatement(sql)
         statement.setString(1, game.name)
-        statement.setFloat(2, game.price!!)
+        statement.setBigDecimal(2, game.price)
 
         val rowsInserted = statement.executeUpdate()
         if (rowsInserted > 0) {
@@ -73,4 +77,3 @@ class Database {
 //    }
 }
 
-*/
