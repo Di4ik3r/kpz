@@ -64,24 +64,13 @@ class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editF
         panelButtonDeveloper.add(buttonRemoveDeveloper)
         this.panelCenterLeft.add(panelButtonDeveloper, BorderLayout.SOUTH)
         val panelRemoveDeveloper = JPanel(); panelRemoveDeveloper.layout = FlowLayout()
-//        panelRemoveDeveloper.add(buttonRemoveDeveloper)
-//        this.panelCenterLeft.add(panelRemoveDeveloper, BorderLayout.SOUTH)
 
         this.panelCenterRight.add(JScrollPane(this.listGenres), BorderLayout.CENTER)
         val panelAddGenre = JPanel(); panelAddGenre.layout = FlowLayout()
         panelAddGenre.add(buttonAddGenre)
-        this.panelCenterRight.add(panelAddGenre, BorderLayout.NORTH)
+        panelAddGenre.add(buttonRemoveGenre)
+        this.panelCenterRight.add(panelAddGenre, BorderLayout.SOUTH)
         val panelRemoveGenre = JPanel(); panelRemoveGenre.layout = FlowLayout()
-        panelRemoveGenre.add(buttonRemoveGenre)
-        this.panelCenterRight.add(panelRemoveGenre, BorderLayout.SOUTH)
-
-//        val input = JOptionPane.showInputDialog(null,
-//            "Choose from all tags",
-//            "Tag chooser",
-//            JOptionPane.QUESTION_MESSAGE,
-//            null,
-//            choices,
-//            choices[0])
 
 
         // ******************************************************* TEXTFIELD SEARCH
@@ -429,27 +418,3 @@ class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editF
         override fun windowOpened(e: WindowEvent?) {}
     }
 }
-
-
-
-//internal class GamesComboBoxModel : AbstractListModel<Game>(), ComboBoxModel<Game> {
-//    var array = Games.select(Games.id, Games.name).map { Games.createEntity(it) }
-//
-//    var selection: Game? = array.first()
-//    override fun getElementAt(index: Int): Game {
-//        return array[index]
-//    }
-//
-//    override fun getSize(): Int {
-//        return array.size
-//    }
-//
-//    override fun setSelectedItem(anItem: Any) {
-//        selection = anItem as Game // to select and register an
-//    } // item from the pull-down list
-//
-//    // Methods implemented from the interface ComboBoxModel
-//    override fun getSelectedItem(): Game {
-//        return selection!! // to add the selection to the combo box
-//    }
-//}
