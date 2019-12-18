@@ -1,5 +1,6 @@
 package ui.edit
 
+
 import me.liuwj.ktorm.dsl.*
 import me.liuwj.ktorm.entity.asSequence
 import me.liuwj.ktorm.entity.first
@@ -15,23 +16,19 @@ import java.awt.event.WindowListener
 import javax.swing.*
 
 
-class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Developers>(editFrame) {
+class EditGenresPanel(val editFrame: EditFrame) : TableTemplatePanel<Genre>(editFrame) {
 
-    var currentDeveloper = Developers.select().map { Developers.createEntity(it) }.first()
-    val frameDeveloperPick = TablePickFrame<Developers>(frameContext)
-
-    val comboboxRole = JComboBox<Role>()
+    var currentGenre = Genres.select().map { Genres.createEntity(it) }.first()
+    val frameGenrePick = TablePickFrame<Genres>(frameContext)
 
     init {
-        println(currentDeveloper)
+        println(currentGenre)
 
-        this.refresh(true)
+        this.refresh()
 
         this.panelCenterCenter.add(Box.createRigidArea(Dimension(0, 100)))
 
         val panelFields = JPanel(); panelFields.layout = FlowLayout()
-        panelFields.add(JLabel("Price: "))
-        panelFields.add(comboboxRole)
         this.panelCenterCenter.add(panelFields)
 
 
@@ -39,9 +36,9 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
         this.panelCenterCenter.add(panelDate)
         this.panelCenterCenter.add(Box.createRigidArea(Dimension(0, 100)))
 
-        val panelButtonDeveloper = JPanel(); panelButtonDeveloper.layout = FlowLayout()
-        this.panelCenterLeft.add(panelButtonDeveloper, BorderLayout.SOUTH)
-        val panelRemoveDeveloper = JPanel(); panelRemoveDeveloper.layout = FlowLayout()
+        val panelButtonGenre = JPanel(); panelButtonGenre.layout = FlowLayout()
+        this.panelCenterLeft.add(panelButtonGenre, BorderLayout.SOUTH)
+        val panelRemoveGenre = JPanel(); panelRemoveGenre.layout = FlowLayout()
 
 
         // ******************************************************* BUTTON SEARCH
@@ -49,17 +46,16 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
 
         // ******************************************************* BUTTON REMOVE
         this.buttonRemove.addActionListener {
-            GameDevelopers.delete { it.developer eq currentDeveloper.id }
-            Developers.delete { it.id eq currentDeveloper.id }
-            if(Developers.count() < 1) {
-                Developers.insert {
-                    it.name to "developer"
-                    it.role to Roles.asSequence().first().id
+            GameGenres.delete { it.genre eq currentGenre.id }
+            Genres.delete { it.id eq currentGenre.id }
+            if(Genres.count() < 1) {
+                Genres.insert {
+                    it.name to "Genre"
                 }
             }
 
-            currentDeveloper = Developers.select()
-                .map { Developers.createEntity(it)}
+            currentGenre = Genres.select()
+                .map { Genres.createEntity(it)}
                 .asSequence()
                 .last()
 
@@ -68,26 +64,26 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
 
 
         // ******************************************************* BUTTON PICK
-        this.frameDeveloperPick.buttonPick.addActionListener {
-            if(frameDeveloperPick.itemsList.selectedIndex < 0) {
+        this.frameGenrePick.buttonPick.addActionListener {
+            if(frameGenrePick.itemsList.selectedIndex < 0) {
                 JOptionPane.showMessageDialog(
-                    frameDeveloperPick,
+                    frameGenrePick,
                     "There is must be selected item."
                 )
                 return@addActionListener
             }
-            this.currentDeveloper = this.frameDeveloperPick.itemsList.selectedValue as Developer
+            this.currentGenre = this.frameGenrePick.itemsList.selectedValue as Genre
 
-            this.frameDeveloperPick.isVisible = false
+            this.frameGenrePick.isVisible = false
             this.frameContext.isVisible = true
 
             refresh()
         }
 
-        this.frameDeveloperPick.addWindowListener(DeveloperChooseListener())
+        this.frameGenrePick.addWindowListener(GenreChooseListener())
 
         this.buttonPick.addActionListener {
-            this.frameDeveloperPick.isVisible = true
+            this.frameGenrePick.isVisible = true
             frameContext.isVisible = false
         }
 
@@ -95,27 +91,26 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
         // ******************************************************* BUTTON UPDATE
         this.buttonUpdate.addActionListener {
             try {
-                Developers.update {
+                Genres.update {
                     it.name to textfieldTitle.text
-                    it.role to (comboboxRole.selectedItem as Role).id
 
                     where {
-                        it.id eq currentDeveloper.id
+                        it.id eq currentGenre.id
                     }
                 }
 
-                currentDeveloper = Developers.select()
-                    .map { Developers.createEntity(it) }
+                currentGenre = Genres.select()
+                    .map { Genres.createEntity(it) }
                     .asSequence()
                     .first {
-                        it.id == currentDeveloper.id
+                        it.id == currentGenre.id
                     }
 
                 this.refresh()
             } catch(ex: Exception) {
                 ex.printStackTrace()
                 JOptionPane.showMessageDialog(
-                    frameDeveloperPick,
+                    frameGenrePick,
                     "Fields has incorrect values"
                 )
             }
@@ -124,40 +119,20 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
 
         // ******************************************************* BUTTON ADD
         this.buttonAdd.addActionListener {
-            Developers.insert {
-                it.name to "developer"
-                it.role to Roles.asSequence().first().id
+            Genres.insert {
+                it.name to "Genre"
             }
 
-            val addedDeveloper = Developers.select().map { Developers.createEntity(it) }.last()
+            val addedGenre = Genres.select().map { Genres.createEntity(it) }.last()
 
-            println(addedDeveloper)
-            this.currentDeveloper = addedDeveloper
+            println(addedGenre)
+            this.currentGenre = addedGenre
             this.refresh()
         }
     }
 
-    fun refresh(roles: Boolean = false) {
-        if(roles) {
-            val roles = Roles.asSequence()
-            val model = DefaultComboBoxModel<Role>()
-            roles.forEach {
-                model.addElement(it)
-            }
-            this.comboboxRole.model = model
-        }
-
-        this.textfieldTitle.text = currentDeveloper.name
-        val role = Roles.select()
-            .where { Roles.id eq currentDeveloper.role }
-            .map { Roles.createEntity(it) }
-            .asSequence()
-            .first()
-
-        this.comboboxRole.model.selectedItem = role
-
-//        this.textfieldPrice.text = currentDeveloper.price.toString()
-
+    fun refresh() {
+        this.textfieldTitle.text = currentGenre.name
     }
 
 
@@ -170,13 +145,13 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
                 try {
                     val id = Integer.parseInt(input)
 
-                    val developers = Developers.select()
-                        .where { Developers.id eq id }
-                        .map { Developers.createEntity(it) }
+                    val Genres = Genres.select()
+                        .where { Genres.id eq id }
+                        .map { Genres.createEntity(it) }
                         .asSequence()
 
-                    if(developers.count() > 0) {
-                        currentDeveloper = developers.first()
+                    if(Genres.count() > 0) {
+                        currentGenre = Genres.first()
                         refresh()
                     } else {
                         JOptionPane.showMessageDialog(
@@ -186,13 +161,13 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
                     }
 
                 } catch(ex: Exception) {
-                    val developers = Developers.select()
-                        .where { Developers.name like input }
-                        .map { Developers.createEntity(it) }
+                    val Genres = Genres.select()
+                        .where { Genres.name like input }
+                        .map { Genres.createEntity(it) }
                         .asSequence()
 
-                    if(developers.count() > 0) {
-                        currentDeveloper = developers.first()
+                    if(Genres.count() > 0) {
+                        currentGenre = Genres.first()
                         refresh()
                     } else {
                         JOptionPane.showMessageDialog(
@@ -209,19 +184,19 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
 
 
 
-    inner class DeveloperChooseListener : WindowListener {
+    inner class GenreChooseListener : WindowListener {
 
         override fun windowActivated(e: WindowEvent?) {
-            val developers = Developers.select()
-                .map { Developers.createEntity(it) }
+            val Genres = Genres.select()
+                .map { Genres.createEntity(it) }
                 .asSequence()
             val model = DefaultListModel<Any>()
-            developers.forEach {
+            Genres.forEach {
                 model.addElement(it)
             }
 
-            frameDeveloperPick.itemsList.model = model
-            frameDeveloperPick.itemsList.selectedIndex = frameDeveloperPick.itemsList.model.size - 1
+            frameGenrePick.itemsList.model = model
+            frameGenrePick.itemsList.selectedIndex = frameGenrePick.itemsList.model.size - 1
         }
 
         override fun windowClosing(e: WindowEvent?) {

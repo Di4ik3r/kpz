@@ -2,13 +2,17 @@ package ui.edit
 
 import me.liuwj.ktorm.dsl.*
 import model.*
+import ui.login.LoginFrame
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
 import java.math.BigDecimal
 import java.time.LocalDate
+import javax.print.attribute.IntegerSyntax
 import javax.swing.*
 
 
@@ -79,6 +83,9 @@ class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editF
 //            choices,
 //            choices[0])
 
+
+        // ******************************************************* TEXTFIELD SEARCH
+        this.textfieldSearch.addKeyListener(SearchKeyAdapter())
 
         // ******************************************************* BUTTON REMOVE GENRE
         this.buttonRemoveGenre.addActionListener {
@@ -223,7 +230,7 @@ class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editF
             currentGame = Games.select()
                 .map { Games.createEntity(it)}
                 .asSequence()
-                .first()
+                .last()
 
             refresh(fields = true, developers = true, genres = true)
         }
@@ -280,7 +287,7 @@ class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editF
             } catch(ex: Exception) {
                 JOptionPane.showMessageDialog(
                     frameGamePick,
-                    "Fields has incorrectly values"
+                    "Fields has incorrect values"
                 )
             }
         }
@@ -302,7 +309,7 @@ class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editF
         }
     }
 
-    private fun refresh(fields: Boolean = false, developers: Boolean = false, genres: Boolean = false) {
+    fun refresh(fields: Boolean = false, developers: Boolean = false, genres: Boolean = false) {
         if(fields) {
             this.textfieldTitle.text = currentGame.name
             this.textfieldPrice.text = currentGame.price.toString()
@@ -348,6 +355,52 @@ class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editF
     }
 
 
+
+    inner class SearchKeyAdapter() : KeyAdapter() {
+
+        override fun keyPressed(e: KeyEvent?) {
+            super.keyPressed(e)
+            if(e?.keyCode == KeyEvent.VK_ENTER) {
+                val input = textfieldSearch.text
+                try {
+                    val id = Integer.parseInt(input)
+
+                    val games = Games.select()
+                        .where { Games.id eq id }
+                        .map { Games.createEntity(it) }
+                        .asSequence()
+
+                    if(games.count() > 0) {
+                        currentGame = games.first()
+                        refresh(true, true, true)
+                    } else {
+                        JOptionPane.showMessageDialog(
+                            null,
+                            "Not found"
+                        )
+                    }
+
+                } catch(ex: Exception) {
+                    val games = Games.select()
+                        .where { Games.name like input }
+                        .map { Games.createEntity(it) }
+                        .asSequence()
+
+                    if(games.count() > 0) {
+                        currentGame = games.first()
+                        refresh(true, true, true)
+                    } else {
+                        JOptionPane.showMessageDialog(
+                            null,
+                            "Not found"
+                        )
+                    }
+                }
+
+                textfieldSearch.text = ""
+            }
+        }
+    }
 
 
     inner class GameChooseListener : WindowListener {

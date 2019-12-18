@@ -34,8 +34,10 @@ open class TableTemplatePanel<T>(val frameContext: EditFrame) : JPanel() {
     val textfieldTitle = JTextField(15)
 
     val panelTopLeft = JPanel()
-    val buttonGames = JButton("open games")
-    val buttonDevelopers = JButton("open developers")
+    val buttonGames = JButton("games")
+    val buttonDevelopers = JButton("developers")
+    val buttonGenres = JButton("genres")
+    val buttonRoles = JButton("roles")
 
     val panelBottom = JPanel()
     val buttonUpdate = JButton("update")
@@ -72,6 +74,8 @@ open class TableTemplatePanel<T>(val frameContext: EditFrame) : JPanel() {
         this.panelTopLeft.layout = FlowLayout()
         this.panelTopLeft.add(buttonGames)
         this.panelTopLeft.add(buttonDevelopers)
+        this.panelTopLeft.add(buttonGenres)
+        this.panelTopLeft.add(buttonRoles)
         this.panelTop.add(panelTopLeft, BorderLayout.WEST)
 
         this.panelBottom.layout = BoxLayout(this.panelBottom, BoxLayout.PAGE_AXIS)
@@ -102,13 +106,16 @@ open class TableTemplatePanel<T>(val frameContext: EditFrame) : JPanel() {
         this.panelTop.add(panelTopRight, BorderLayout.EAST)
 
 
-
-
+        this.buttonGenres.addActionListener {
+            this.frameContext.openGenres()
+        }
+        this.buttonRoles.addActionListener {
+            this.frameContext.openRoles()
+        }
         this.buttonGames.addActionListener {
             this.frameContext.openGames()
         }
         this.buttonDevelopers.addActionListener {
-            println("developers pressed")
             this.frameContext.openDevelopers()
         }
 
