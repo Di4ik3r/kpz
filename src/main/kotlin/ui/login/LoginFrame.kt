@@ -15,9 +15,6 @@ class LoginFrame : JFrame() {
 
     val mainPanel = LoginPanel(this)
 
-//    val viewFrame = ViewFrame()
-//    val editFrame = EditFrame()
-
     init {
         initComponents()
     }
@@ -97,26 +94,6 @@ class LoginFrame : JFrame() {
 
             buttonLogin.addActionListener {
                 context.open()
-//                val admins = Admins.select()
-//                    .whereWithConditions {
-//                        if(textfieldName.text != null)
-//                            it += Admins.name eq textfieldName.text
-//                        if(textfieldPass.text != null)
-//                            it += Admins.password eq textfieldPass.text
-//                    }
-//                    .asSequence()
-//                if(admins.count() > 0) {
-//                    println("elkal;sdk;asd")
-//                } else {
-//                    println("lox")
-//                }
-
-//                try {
-//                    Database.connect("jdbc:mysql://localhost:3306/kpz", user = textfieldName.text, password = textfieldPass.text, driver = "com.mysql.cj.jdbc.Driver")
-//                    println("logen")
-//                } catch (ex: Exception) {
-//                    println("lox")
-//                }
             }
         }
 
