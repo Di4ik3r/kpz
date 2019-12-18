@@ -1,12 +1,6 @@
 
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.entity.EntitySequence
-import me.liuwj.ktorm.entity.asSequence
-import me.liuwj.ktorm.entity.forEach
-import model.*
-import ui.main.LoginFrame
+import ui.login.LoginFrame
 
 fun main() {
 

@@ -1,23 +1,22 @@
-package ui.main
+package ui.login
 
-import com.sun.org.apache.xpath.internal.operations.And
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.dsl.and
-import model.Admin
-import model.Admins
+import ui.edit.EditFrame
+import ui.view.ViewFrame
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import java.awt.event.KeyListener
 import javax.swing.*
 
 class LoginFrame : JFrame() {
 
     val mainPanel = LoginPanel(this)
+
+//    val viewFrame = ViewFrame()
+//    val editFrame = EditFrame()
 
     init {
         initComponents()
@@ -28,8 +27,20 @@ class LoginFrame : JFrame() {
             val name = this.mainPanel.textfieldName.text
             val pass = this.mainPanel.textfieldPass.text
             Database.connect("jdbc:mysql://localhost:3306/kpz", user = name, password = pass, driver = "com.mysql.cj.jdbc.Driver")
+            when(name) {
+                "root" ->  {
+                    val editFrame = EditFrame()
+                    editFrame.isVisible = true
+                    this.isVisible = false
+                }
+                "view" -> {
+                    val viewFrame = ViewFrame()
+                    viewFrame.isVisible = true
+                    this.isVisible = false
+                }
+            }
         } catch(ex: Exception) {
-            println("ex")
+            ex.printStackTrace()
         }
     }
 
@@ -81,7 +92,7 @@ class LoginFrame : JFrame() {
             this.add(panelBottom)
 
 
-//            textfieldName.addKeyListener(LoginKeyAdapter(context))
+            textfieldName.addKeyListener(LoginKeyAdapter(context))
             textfieldPass.addKeyListener(LoginKeyAdapter(context))
 
             buttonLogin.addActionListener {
@@ -112,12 +123,6 @@ class LoginFrame : JFrame() {
         class LoginKeyAdapter(context: LoginFrame) : KeyAdapter() {
 
             val context = context
-
-            override fun keyTyped(e: KeyEvent?) {
-//                super.keyTyped(e)
-//                if(e?.keyCode == KeyEvent.VK_A)
-//                    context.open()
-            }
 
             override fun keyPressed(e: KeyEvent?) {
                 super.keyPressed(e)
