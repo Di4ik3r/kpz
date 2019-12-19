@@ -1,10 +1,13 @@
-package ui.edit
+package ui.edit.panel
 
 import me.liuwj.ktorm.dsl.*
 import me.liuwj.ktorm.entity.asSequence
 import me.liuwj.ktorm.entity.first
 import me.liuwj.ktorm.entity.forEach
 import model.*
+import ui.edit.EditFrame
+import ui.edit.TablePickFrame
+import ui.edit.TableTemplatePanel
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout

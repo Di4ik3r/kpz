@@ -1,10 +1,13 @@
 package ui.edit
 
+import ui.edit.panel.EditDevelopersPanel
+import ui.edit.panel.EditGamesPanel
+import ui.edit.panel.EditGenresPanel
+import ui.edit.panel.EditRolesPanel
 import ui.login.LoginFrame
 import java.awt.CardLayout
 import java.awt.Dimension
 import javax.swing.JFrame
-import javax.swing.JLabel
 import javax.swing.JPanel
 
 

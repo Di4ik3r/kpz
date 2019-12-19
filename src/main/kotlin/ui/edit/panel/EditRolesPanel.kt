@@ -1,8 +1,11 @@
-package ui.edit
+package ui.edit.panel
 
 
 import me.liuwj.ktorm.dsl.*
 import model.*
+import ui.edit.EditFrame
+import ui.edit.TablePickFrame
+import ui.edit.TableTemplatePanel
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout

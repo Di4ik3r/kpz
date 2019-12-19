@@ -2,9 +2,10 @@
 
 package ui.view
 
-import me.liuwj.ktorm.database.Database
-import ui.login.LoginFrame
+import ui.view.panel.ViewMainPanel
+import java.awt.CardLayout
 import java.awt.Dimension
+import java.awt.FlowLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
 
@@ -12,7 +13,8 @@ import javax.swing.JPanel
 
 class ViewFrame : JFrame() {
 
-    val mainPanel = JPanel()
+    val mainPanel = ViewMainPanel()
+
 
     init {
         initComponents()
@@ -21,7 +23,7 @@ class ViewFrame : JFrame() {
     private fun initComponents() {
         contentPane.add(mainPanel)
 
-        preferredSize = Dimension(550, 350)
+        preferredSize = Dimension(900, 450)
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 
         pack()
