@@ -23,6 +23,9 @@ class LoginFrame : JFrame() {
         try {
             val name = this.mainPanel.textfieldName.text
             val pass = this.mainPanel.textfieldPass.text
+
+            this.mainPanel.textfieldName.text = ""
+            this.mainPanel.textfieldPass.text = ""
             Database.connect("jdbc:mysql://localhost:3306/kpz", user = name, password = pass, driver = "com.mysql.cj.jdbc.Driver")
             when(name) {
                 "root" ->  {
@@ -31,7 +34,7 @@ class LoginFrame : JFrame() {
                     this.isVisible = false
                 }
                 "view" -> {
-                    val viewFrame = ViewFrame()
+                    val viewFrame = ViewFrame(this)
                     viewFrame.isVisible = true
                     this.isVisible = false
                 }

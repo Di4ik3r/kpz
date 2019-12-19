@@ -19,7 +19,7 @@ import javax.swing.*
 
 class EditGamesPanel(val editFrame: EditFrame) : TableTemplatePanel<Games>(editFrame) {
 
-    var currentGame = Games.select().map { Games.createEntity(it) }.first()
+    var currentGame = Games.select().map { Games.createEntity(it) }.last()
     val frameGamePick = TablePickFrame<Games>(frameContext)
 
     val textfieldPrice = JTextField(5)

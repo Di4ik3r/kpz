@@ -20,7 +20,7 @@ import javax.swing.*
 
 class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Developers>(editFrame) {
 
-    var currentDeveloper = Developers.select().map { Developers.createEntity(it) }.first()
+    var currentDeveloper = Developers.select().map { Developers.createEntity(it) }.last()
     val frameDeveloperPick = TablePickFrame<Developers>(frameContext)
 
     val comboboxRole = JComboBox<Role>()
@@ -148,6 +148,11 @@ class EditDevelopersPanel(val editFrame: EditFrame) : TableTemplatePanel<Develop
                 model.addElement(it)
             }
             this.comboboxRole.model = model
+
+            currentDeveloper = Developers.select()
+                .map { Developers.createEntity(it) }
+                .asSequence()
+                .last()
         }
 
         this.textfieldTitle.text = currentDeveloper.name

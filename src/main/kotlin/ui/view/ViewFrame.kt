@@ -2,6 +2,7 @@
 
 package ui.view
 
+import ui.login.LoginFrame
 import ui.view.panel.ViewMainPanel
 import java.awt.CardLayout
 import java.awt.Dimension
@@ -11,9 +12,9 @@ import javax.swing.JPanel
 
 
 
-class ViewFrame : JFrame() {
+class ViewFrame(val loginFrame: LoginFrame) : JFrame() {
 
-    val mainPanel = ViewMainPanel()
+    val mainPanel = ViewMainPanel(this)
 
 
     init {

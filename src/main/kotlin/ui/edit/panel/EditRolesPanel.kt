@@ -2,6 +2,9 @@ package ui.edit.panel
 
 
 import me.liuwj.ktorm.dsl.*
+import me.liuwj.ktorm.entity.asSequence
+import me.liuwj.ktorm.entity.first
+import me.liuwj.ktorm.entity.last
 import model.*
 import ui.edit.EditFrame
 import ui.edit.TablePickFrame
@@ -18,7 +21,7 @@ import javax.swing.*
 
 class EditRolesPanel(val editFrame: EditFrame) : TableTemplatePanel<Roles>(editFrame) {
 
-    var currentRole = Roles.select().map { Roles.createEntity(it) }.first()
+    var currentRole = Roles.select().map { Roles.createEntity(it) }.last()
     val frameRolePick = TablePickFrame<Roles>(frameContext)
 
     init {
@@ -45,6 +48,10 @@ class EditRolesPanel(val editFrame: EditFrame) : TableTemplatePanel<Roles>(editF
 
         // ******************************************************* BUTTON REMOVE
         this.buttonRemove.addActionListener {
+//            Developers.delete { it.role eq currentRole.id }
+            Developers.update {
+                it.role to Roles.asSequence().last().id
+            }
             Roles.delete { it.id eq currentRole.id }
             if(Roles.count() < 1) {
                 Roles.insert {

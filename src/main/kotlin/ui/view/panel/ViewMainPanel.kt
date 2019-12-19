@@ -4,22 +4,25 @@ import me.liuwj.ktorm.dsl.*
 import me.liuwj.ktorm.entity.asSequence
 import me.liuwj.ktorm.entity.count
 import me.liuwj.ktorm.entity.elementAt
+import me.liuwj.ktorm.entity.forEach
 import model.*
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.poi.xwpf.usermodel.XWPFDocument
+import ui.view.ViewFrame
 import java.awt.BorderLayout
+import java.awt.FlowLayout
+import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.*
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.swing.table.DefaultTableColumnModel
 import javax.swing.table.DefaultTableModel
 
 
-class ViewMainPanel : JPanel() {
+class ViewMainPanel(val frameContext: ViewFrame) : JPanel() {
 
     val tableGames: JTable
     val tableGamesDevelopers: JTable
@@ -29,7 +32,9 @@ class ViewMainPanel : JPanel() {
     private val columnsGamesDevelopers = arrayOf("id", "name", "role")
     private val columnsGamesGenres = arrayOf("id", "name")
 
-    private val buttonToExcel = JButton("Export to excel")
+    private val buttonToWord = JButton("export to word")
+    private val buttonToExcel = JButton("export to excel")
+    private val buttonLogout = JButton("logout")
 
     init {
         this.layout = BoxLayout(this, BoxLayout.LINE_AXIS)
@@ -52,11 +57,47 @@ class ViewMainPanel : JPanel() {
 
         val panelGames = JPanel(); panelGames.layout = BorderLayout()
         panelGames.add(JScrollPane(tableGames), BorderLayout.CENTER)
-        panelGames.add(buttonToExcel, BorderLayout.SOUTH)
+        val panelGamesButton = JPanel(); panelGamesButton.layout = FlowLayout()
+        panelGamesButton.add(buttonToExcel)
+        panelGamesButton.add(buttonToWord)
+        panelGames.add(panelGamesButton, BorderLayout.SOUTH)
         this.add(panelGames)
         this.add(JScrollPane(tableGamesDevelopers))
-        this.add(JScrollPane(tableGamesGenres))
+        val panelGenres = JPanel(); panelGenres.layout = BorderLayout()
+        panelGenres.add(JScrollPane(tableGamesGenres), BorderLayout.CENTER)
+        panelGenres.add(buttonLogout, BorderLayout.SOUTH)
+        this.add(panelGenres)
 
+
+        this.buttonLogout.addActionListener {
+            this.frameContext.isVisible = false
+            this.frameContext.loginFrame.isVisible = true
+        }
+
+        this.buttonToWord.addActionListener {
+            val document = XWPFDocument()
+            val out = FileOutputStream(File("games.docx"))
+
+            val table = document.createTable()
+            var tableRowOne = table.getRow(0);
+            tableRowOne.getCell(0).setText("id");
+            tableRowOne.addNewTableCell().setText("name");
+            tableRowOne.addNewTableCell().setText("price");
+            tableRowOne.addNewTableCell().setText("date");
+
+            val games = Games.asSequence()
+            var indexer = 0
+            games.forEach {
+                val row = table.createRow()
+                row.getCell(0).text = it.id.toString()
+                row.getCell(1).text = it.name
+                row.getCell(2).text = it.price.toString()
+                row.getCell(3).text = it.date.toString()
+            }
+
+            document.write(out)
+            out.close()
+        }
 
         this.buttonToExcel.addActionListener {
             val workbook: Workbook = XSSFWorkbook()
@@ -97,7 +138,25 @@ class ViewMainPanel : JPanel() {
                 row.createCell(3)
                     .setCellValue(game.price.toString())
             }
+            for (i in 0 until columnsGames.count()) {
+                sheet.autoSizeColumn(i)
+            }
 
+            rowNum += 2
+            var column = 0
+            val removedGames = RemovedGames.asSequence()
+            for (game in removedGames) {
+                val row: Row = sheet.createRow(rowNum++)
+                row.createCell(column)
+                    .setCellValue(game.id.toString())
+                row.createCell(column + 1)
+                    .setCellValue(game.name)
+                val dateOfBirthCell: Cell = row.createCell(column + 2)
+                dateOfBirthCell.setCellValue(game.date)
+                dateOfBirthCell.setCellStyle(dateCellStyle)
+                row.createCell(column + 3)
+                    .setCellValue(game.price.toString())
+            }
             for (i in 0 until columnsGames.count()) {
                 sheet.autoSizeColumn(i)
             }
@@ -105,7 +164,7 @@ class ViewMainPanel : JPanel() {
             val fileOut = FileOutputStream("games.xlsx")
             workbook.write(fileOut)
             fileOut.close()
-            
+
             workbook.close()
         }
     }
