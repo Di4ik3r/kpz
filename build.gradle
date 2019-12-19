@@ -24,6 +24,9 @@ dependencies {
     compile "me.liuwj.ktorm:ktorm-core:2.6"
 
     compile "me.liuwj.ktorm:ktorm-support-mysql:2.6"
+
+    compile "org.apache.poi:poi:4.1.1"	     // For `.xls` files
+    compile "org.apache.poi:poi-ooxml:4.1.1"	 // For `.xlsx` files
 }
 
 compileKotlin {
